@@ -8,7 +8,7 @@ defaults: &defaults
 
 version: 2
 jobs:
-  checkout_code:
+  checkout:
     <<: *defaults
     steps:
     - checkout
@@ -38,42 +38,39 @@ jobs:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
     - run: chef exec rspec spec
 
-  # build:
-  #   <<: *defaults
-  #   steps:
-  #   - restore_cache:
-  #       key: repo-{{ .Environment.CIRCLE_SHA1 }}
-  #   - run: echo "build"
-
 workflows:
   version: 2
   build:
     jobs:
-    - checkout_code:
+    - checkout:
         filters:
           tags:
             only: /v.*/
+
     - cookstyle:
         requires:
-        - checkout_code
+        - checkout
         filters:
           tags:
             only: /v.*/
+
     - foodcritic:
         requires:
-        - checkout_code
+        - checkout
         filters:
           tags:
             only: /v.*/
+
     - chefspec:
         requires:
-        - checkout_code
+        - checkout
         filters:
           tags:
             only: /v.*/
-    # - build:
-    #     requires:
-    #     - checkout_code
-    #     filters:
-    #       tags:
-    #         only: /v.*/
+
+    - build:
+        requires:
+        - checkout
+        filters:
+          tags:
+            only: /v.*/
