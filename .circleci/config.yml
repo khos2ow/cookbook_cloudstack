@@ -38,6 +38,13 @@ jobs:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
     - run: chef exec rspec spec
 
+  kitchen:
+    <<: *defaults
+    steps:
+    - restore_cache:
+        key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: echo "run kitchen test"
+
 workflows:
   version: 2
   build:
@@ -49,28 +56,28 @@ workflows:
 
     - cookstyle:
         requires:
-        - checkout
+          - checkout
         filters:
           tags:
             only: /v.*/
 
     - foodcritic:
         requires:
-        - checkout
+          - checkout
         filters:
           tags:
             only: /v.*/
 
     - chefspec:
         requires:
-        - checkout
+          - checkout
         filters:
           tags:
             only: /v.*/
 
-    - build:
+    - kitchen:
         requires:
-        - checkout
+          - checkout
         filters:
           tags:
             only: /v.*/
