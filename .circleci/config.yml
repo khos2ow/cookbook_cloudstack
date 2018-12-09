@@ -50,8 +50,7 @@ jobs:
     - run: chef --version
     - run: berks install
     - run: chef gem install kitchen-docker
-    - run: KITCHEN_LOCAL_YAML=.kitchen.docker.yml
-    - run: kitchen test --destroy always
+    - run: KITCHEN_LOCAL_YAML=.kitchen.docker.yml kitchen test --destroy always
 
 workflows:
   version: 2
