@@ -38,12 +38,12 @@ jobs:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
     - run: chef exec rspec spec
 
-  build:
-    <<: *defaults
-    steps:
-    - restore_cache:
-        key: repo-{{ .Environment.CIRCLE_SHA1 }}
-    - run: echo "build"
+  # build:
+  #   <<: *defaults
+  #   steps:
+  #   - restore_cache:
+  #       key: repo-{{ .Environment.CIRCLE_SHA1 }}
+  #   - run: echo "build"
 
 workflows:
   version: 2
