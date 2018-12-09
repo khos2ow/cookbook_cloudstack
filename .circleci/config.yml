@@ -1,0 +1,39 @@
+defaults: &defaults
+  machine:
+    services:
+      - docker
+  docker:
+    - image: circleci/ruby:2.4.1-node-browsers
+  working_directory: ~/chef/cookbook/cookbook_cloudstack
+
+version: 2
+jobs:
+  checkout:
+    <<: *defaults
+    steps:
+    - checkout
+    - save_cache:
+        key: repo-{{ .Environment.CIRCLE_SHA1 }}
+        paths:
+          - ~/chef/cookbook/cookbook_cloudstack
+
+  cookstyle:
+    <<: *defaults
+    steps:
+    - restore_cache:
+        key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: chef exec cookstyle .
+
+  foodcritic:
+    <<: *defaults
+    steps:
+    - restore_cache:
+        key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: chef exec foodcritic .
+
+  chefspec:
+    <<: *defaults
+    steps:
+    - restore_cache:
+        key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: chef exec rspec spec
