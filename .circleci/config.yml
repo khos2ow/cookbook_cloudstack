@@ -1,0 +1,79 @@
+defaults: &defaults
+  # machine:
+  #   services:
+  #     - docker
+  docker:
+    - image: chef/chefdk
+  working_directory: ~/chef/cookbook/cookbook_cloudstack
+
+version: 2
+jobs:
+  checkout_code:
+    <<: *defaults
+    steps:
+    - checkout
+    - save_cache:
+        key: repo-{{ .Environment.CIRCLE_SHA1 }}
+        paths:
+          - ~/chef/cookbook/cookbook_cloudstack
+
+  cookstyle:
+    <<: *defaults
+    steps:
+    - restore_cache:
+        key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: chef exec cookstyle .
+
+  foodcritic:
+    <<: *defaults
+    steps:
+    - restore_cache:
+        key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: chef exec foodcritic .
+
+  chefspec:
+    <<: *defaults
+    steps:
+    - restore_cache:
+        key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: chef exec rspec spec
+
+  build:
+    <<: *defaults
+    steps:
+    - restore_cache:
+        key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: echo "build"
+
+workflows:
+  version: 2
+  build:
+    jobs:
+    - checkout_code:
+        filters:
+          tags:
+            only: /v.*/
+    - cookstyle:
+        requires:
+        - checkout_code
+        filters:
+          tags:
+            only: /v.*/
+    - foodcritic:
+        requires:
+        - checkout_code
+        filters:
+          tags:
+            only: /v.*/
+    - chefspec:
+        requires:
+        - checkout_code
+        filters:
+          tags:
+            only: /v.*/
+    - build:
+        requires:
+        - checkout_code
+        filters:
+          tags:
+            only: /v.*/
