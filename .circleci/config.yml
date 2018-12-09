@@ -22,6 +22,7 @@ jobs:
     steps:
     - restore_cache:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: chef --version
     - run: chef exec cookstyle .
 
   foodcritic:
@@ -29,6 +30,7 @@ jobs:
     steps:
     - restore_cache:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: chef --version
     - run: chef exec foodcritic .
 
   chefspec:
@@ -36,6 +38,7 @@ jobs:
     steps:
     - restore_cache:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: chef --version
     - run: bundle install
     - run: bundle update
     - run: chef exec rspec spec
@@ -45,6 +48,7 @@ jobs:
     steps:
     - restore_cache:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: chef --version
     - run: bundle install
     - run: bundle update
     - run: echo "run kitchen test"
