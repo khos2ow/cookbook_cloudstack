@@ -71,9 +71,9 @@ workflows:
         filters:
           tags:
             only: /v.*/
-    - build:
-        requires:
-        - checkout_code
-        filters:
-          tags:
-            only: /v.*/
+    # - build:
+    #     requires:
+    #     - checkout_code
+    #     filters:
+    #       tags:
+    #         only: /v.*/
