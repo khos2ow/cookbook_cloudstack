@@ -39,8 +39,7 @@ jobs:
     - restore_cache:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
     - run: chef --version
-    - run: bundle install
-    - run: bundle update
+    - run: berks install
     - run: chef exec rspec spec
 
   kitchen:
@@ -49,9 +48,9 @@ jobs:
     - restore_cache:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
     - run: chef --version
-    - run: bundle install
-    - run: bundle update
+    - run: berks install
     - run: echo "run kitchen test"
+
 
 workflows:
   version: 2
