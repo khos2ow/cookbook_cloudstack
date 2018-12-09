@@ -36,6 +36,8 @@ jobs:
     steps:
     - restore_cache:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: bundle install
+    - run: bundle update
     - run: chef exec rspec spec
 
   kitchen:
@@ -43,6 +45,8 @@ jobs:
     steps:
     - restore_cache:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
+    - run: bundle install
+    - run: bundle update
     - run: echo "run kitchen test"
 
 workflows:
