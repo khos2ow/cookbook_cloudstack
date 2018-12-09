@@ -49,8 +49,9 @@ jobs:
         key: repo-{{ .Environment.CIRCLE_SHA1 }}
     - run: chef --version
     - run: berks install
-    - run: echo "run kitchen test"
-
+    - run: chef gem install kitchen-docker
+    - run: KITCHEN_LOCAL_YAML=.kitchen.docker.yml
+    - run: kitchen test --destroy always
 
 workflows:
   version: 2
